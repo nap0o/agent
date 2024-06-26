@@ -44,4 +44,5 @@ jobs:
         run: ls -R dist
 
       - name: Compress binary with UPX
-        run: upx --best --ultra-brute dist/agent_linux_mipsle/agent-nezha  # 替换为实际路径
+        run: upx --best --ultra-brute dist/agent_linux_mipsle_hardfloat/nezha-agent
+
