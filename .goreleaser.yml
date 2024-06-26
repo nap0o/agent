@@ -1,15 +1,15 @@
 # .goreleaser.yml
 project_name: nezha-agent  # 替换为你的项目名
 builds:
-  - id: mipsle
-    goos: linux
-    goarch: mipsle
+  - goos:
+      - linux
+    goarch:
+      - mipsle
     env:
       - CGO_ENABLED=0  # 禁用 CGO 以生成纯静态二进制文件
-    flags:
-      - -ldflags="-s -w"  # 去掉调试信息以减小二进制文件大小
-    binaries:
-      - your_binary_name  # 替换为你的二进制文件名
+    ldflags:
+      - -s -w  # 去掉调试信息以减小二进制文件大小
+    binary: your_binary_name  # 替换为你的二进制文件名
 
 archives:
   - format: tar.gz
