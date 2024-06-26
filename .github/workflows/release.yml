@@ -7,42 +7,45 @@ on:
       - "v*"
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     container:
+      # 1.20 是 Windows 7/8 Server 2008/2012 最后一个支持版本
       image: goreleaser/goreleaser-cross:v1.20
-
     steps:
-      - name: Configure Git Safe Directory
-        run: git config --global --add safe.directory /__w/agent/agent
-
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - run: |
+          git config --global --add safe.directory /__w/agent/agent
+      - uses: actions/checkout@master
         with:
           fetch-depth: 0
-
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      - uses: actions/setup-go@v4
         with:
           go-version: "1.20.13"
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install UPX
         run: |
           apt-get update
           apt-get install -y upx
 
-      - name: Build and release with GoReleaser
-        uses: goreleaser/goreleaser-action@v2
+      - name: Compress binary with UPX
+        run: |
+          upx --best --ultra-brute dist/nezha-agent_linux_mipsle/nezha-agent
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
         with:
-          distribution: goreleaser
-          version: latest
-          args: release --snapshot
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/agent_linux_mipsle/nezha-agent
+          asset_name: nezha-agent
+          asset_content_type: application/octet-stream
+          asset_label: "Nezha Agent MIPSLE"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: List build directory
-        run: ls -R dist
-
-      - name: Compress binary with UPX
-        run: upx --best --ultra-brute dist/agent_linux_mipsle_hardfloat/nezha-agent
-
