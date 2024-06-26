@@ -1,5 +1,5 @@
 # .goreleaser.yml
-project_name: nezha-agent  # 替换为你的项目名
+project_name: agent  # 替换为你的项目名
 builds:
   - goos:
       - linux
