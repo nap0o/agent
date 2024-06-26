@@ -1,78 +1,21 @@
-before:
-  hooks:
-    - go mod tidy -v
+# .goreleaser.yml
+project_name: nezha-agent  # 替换为你的项目名
 builds:
-  - id: universal
+  - id: mipsle
+    goos: linux
+    goarch: mipsle
     env:
-      - CGO_ENABLED=0
-    ldflags:
-      - -s -w -X main.version={{.Version}} -X main.arch={{.Arch}}
-    goos:
-      - linux
-      - windows
-      - freebsd
-    goarch:
-      - arm
-      - arm64
-      - 386
-      - amd64
-      - mips
-      - mipsle
-      - s390x
-      - riscv64
-    gomips:
-      - softfloat
-    ignore:
-      - goos: windows
-        goarch: arm
-    main: ./cmd/agent
-    binary: nezha-agent
-  - id: darwin-amd64
-    env:
-      - CGO_ENABLED=1
-      - CC=o64-clang
-      - CXX=o64-clang++
-    ldflags:
-      - -s -w -X main.version={{.Version}} -X main.arch={{.Arch}}
-    goos:
-      - darwin
-    goarch:
-      - amd64
-    main: ./cmd/agent
-    binary: nezha-agent
-  - id: darwin-arm64
-    env:
-      - CGO_ENABLED=1
-      - CC=oa64-clang
-      - CXX=oa64-clang++
-    ldflags:
-      - -s -w -X main.version={{.Version}} -X main.arch={{.Arch}}
-    goos:
-      - darwin
-    goarch:
-      - arm64
-    main: ./cmd/agent
-    binary: nezha-agent
-universal_binaries:
-  - name_template: "nezha-agent"
-    replace: false
+      - CGO_ENABLED=0  # 禁用 CGO 以生成纯静态二进制文件
+    flags:
+      - -ldflags="-s -w"  # 去掉调试信息以减小二进制文件大小
+    binaries:
+      - your_binary_name  # 替换为你的二进制文件名
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - nezha-agent-mipsle  # 替换为你的二进制文件名
+
 checksum:
   name_template: "checksums.txt"
-snapshot:
-  name_template: "nezha-agent"
-archives:
-  - name_template: "nezha-agent_{{ .Os }}_{{ .Arch }}"
-    format: zip
-    files:
-      - none*
-changelog:
-  sort: asc
-  filters:
-    exclude:
-      - "^docs:"
-      - "^test:"
-      - "^chore"
-      - Merge pull request
-      - Merge branch
-      - go mod tidy
-      - New translations
