@@ -33,7 +33,7 @@ jobs:
           version: latest
           args: release --id mipsle --skip-validate
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Compress binary with UPX
         run: upx --best --ultra-brute dist/nezha-agent_linux_mipsle/nezha-agent-mipsle  # 替换为实际路径
