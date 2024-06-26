@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Configure Git Safe Directory
-        run: git config --global --add safe.directory /__w/agent/nezha-agent
+        run: git config --global --add safe.directory /__w/agent/agent
 
       - name: Checkout code
         uses: actions/checkout@v3
