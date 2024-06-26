@@ -1,7 +1,8 @@
 # .goreleaser.yml
 project_name: agent  # 替换为你的项目名
 builds:
-  - goos:
+  - main: ./cmd/agent
+    goos:
       - linux
     goarch:
       - mipsle
