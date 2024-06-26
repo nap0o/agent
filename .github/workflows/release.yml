@@ -39,6 +39,9 @@ jobs:
           args: release --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: List build directory
+        run: ls -R dist
 
       - name: Compress binary with UPX
-        run: upx --best --ultra-brute dist/agent_linux_mipsle/nezha-agent-mipsle  # 替换为实际路径
+        run: upx --best --ultra-brute dist/agent_linux_mipsle/agent-nezha  # 替换为实际路径
